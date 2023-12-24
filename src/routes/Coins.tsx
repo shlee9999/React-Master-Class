@@ -3,6 +3,9 @@ import { useQuery } from 'react-query';
 import { Link } from 'react-router-dom';
 import styled from 'styled-components';
 import { fetchCoins } from '../api';
+import { Helmet } from 'react-helmet';
+import { useSetRecoilState } from 'recoil';
+import { isDarkAtom } from '../atoms';
 const Container = styled.div`
   padding: 0px 20px;
   max-width: 480px;
@@ -40,6 +43,7 @@ const CoinWrapper = styled.div`
   display: flex;
   align-items: center;
   gap: 20px;
+  color: ${(props) => props.theme.textColor};
 `;
 const Loader = styled.span`
   text-align: center;
@@ -58,23 +62,19 @@ interface ICoin {
   is_active: boolean;
   type: string;
 }
+
 function Coins() {
+  const setterFn = useSetRecoilState(isDarkAtom);
   const { isLoading, data } = useQuery<ICoin[]>(['allCoins'], fetchCoins);
-  console.log(isLoading, data);
-  // const [coins, setCoCoinInterfaceins] = useState<CoinInterface[]>([]);
-  // const [loading, setLoading] = useState(true);
-  // useEffect(() => {
-  //   (async () => {
-  //     const response = await fetch('https://api.coinpaprika.com/v1/coins');
-  //     const json = await response.json();
-  //     setLoading(false);
-  //     setCoins(json.slice(0, 100)); // slice
-  //   })(); // 함수 실행 잡기술
-  // }, []);
   return (
     <Container>
+      <Helmet>
+        <title>코인</title>
+      </Helmet>
+
       <Header>
         <Title>코인</Title>
+        <button onClick={() => setterFn((prev) => !prev)}>Toggle Mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>

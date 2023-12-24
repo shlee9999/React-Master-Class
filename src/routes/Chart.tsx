@@ -1,6 +1,8 @@
 import { useQuery } from 'react-query';
 import { fetchCoinHistory } from '../api';
 import ApexChart from 'react-apexcharts';
+import { useRecoilValue } from 'recoil';
+import { isDarkAtom } from '../atoms';
 interface ChartProps {
   coinId: string;
 }
@@ -16,9 +18,8 @@ interface IHistorical {
 }
 
 function Chart({ coinId }: ChartProps) {
-  const { isLoading, data } = useQuery<IHistorical[]>(['ohlcv', coinId], () =>
-    fetchCoinHistory(coinId)
-  );
+  const isDark = useRecoilValue(isDarkAtom);
+  const { isLoading, data } = useQuery<IHistorical[]>(['ohlcv', coinId], () => fetchCoinHistory(coinId));
   return (
     <div>
       {isLoading ? (
@@ -26,7 +27,14 @@ function Chart({ coinId }: ChartProps) {
       ) : (
         <ApexChart
           type='line'
+          series={[
+            {
+              name: 'Price',
+              data: data?.map((price) => price.close) as number[],
+            },
+          ]}
           options={{
+            dataLabels: { enabled: false },
             chart: {
               height: 300,
               width: 500,
@@ -36,11 +44,10 @@ function Chart({ coinId }: ChartProps) {
               background: 'transparent',
             },
             grid: { show: false },
-            theme: { mode: 'dark' },
+            theme: { mode: isDark ? 'dark' : 'light' },
             xaxis: {
-              categories: data?.map((price) =>
-                price.time_close.slice(5, 10).replace('-', '/')
-              ),
+              categories: data?.map((price) => price.time_close),
+              type: 'datetime',
               axisTicks: { show: false },
               axisBorder: { show: false },
             },
@@ -49,14 +56,18 @@ function Chart({ coinId }: ChartProps) {
               curve: 'smooth',
               width: 3,
             },
-          }}
-          series={[
-            {
-              name: 'Price',
-              data: data?.map((price) => price.close) as number[],
+            fill: {
+              type: 'gradient',
+              gradient: { gradientToColors: ['#0be881'], stops: [0, 100] }, // blue에서
             },
-          ]}
-        ></ApexChart>
+            colors: ['#0fbcf9'], //red로 그라데이션
+            tooltip: {
+              y: {
+                formatter: (value) => `$${value.toFixed(2)}`,
+              },
+            },
+          }}
+        />
       )}
     </div>
   );
