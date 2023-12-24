@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
 import Router from './routes/Router';
-
+import { ReactQueryDevtools } from 'react-query/devtools';
 const GlobalStyle = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -59,6 +59,7 @@ table {
 }
 a{
   text-decoration: none;
+  color: inherit;
 }
 `;
 function App() {
@@ -66,6 +67,7 @@ function App() {
     <>
       <GlobalStyle />
       <Router />
+      <ReactQueryDevtools />
     </>
   );
 }
