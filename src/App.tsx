@@ -1,6 +1,6 @@
 import { createGlobalStyle } from 'styled-components';
-import Router from './routes/Router';
-import { ReactQueryDevtools } from 'react-query/devtools';
+import ToDoList from './components/ToDoList';
+
 const GlobalStyle = createGlobalStyle`
 /* http://meyerweb.com/eric/tools/css/reset/ 
    v2.0 | 20110126
@@ -50,9 +50,15 @@ q:before, q:after {
 	content: '';
 	content: none;
 }
+input{
+	outline: none;
+}
 table {
 	border-collapse: collapse;
 	border-spacing: 0;
+}
+select{
+	outline: none;
 }
 *{
   box-sizing: border-box;
@@ -66,8 +72,7 @@ function App() {
   return (
     <>
       <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools />
+      <ToDoList />
     </>
   );
 }
