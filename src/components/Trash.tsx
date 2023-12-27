@@ -1,7 +1,7 @@
 import { Droppable } from '@hello-pangea/dnd';
 import React from 'react';
 import styled from 'styled-components';
-const Wrapper = styled.div`
+const Wrapper = styled.div<AreaProps>`
   display: flex;
   flex-direction: column;
   width: 150px;
@@ -12,24 +12,26 @@ const Wrapper = styled.div`
   position: absolute;
   bottom: 50px;
   right: 50px;
+  filter: brightness(${(props) => (props.isDraggingOver ? 0.5 : 1)});
+  transition: filter 0.2s ease-in;
 `;
-const Area = styled.div`
-  background-color: tomato;
-  flex-grow: 1;
-  padding: 10px;
-`;
+
+interface AreaProps {
+  isDraggingOver: boolean;
+}
 function Trash() {
   return (
-    <Wrapper>
-      Trash
-      <Droppable droppableId='trash'>
-        {(magic, snapshot) => (
-          <Area ref={magic.innerRef} {...magic.droppableProps}>
-            쓰레기통
-          </Area>
-        )}
-      </Droppable>
-    </Wrapper>
+    <Droppable droppableId='trash'>
+      {(magic, snapshot) => (
+        <Wrapper
+          ref={magic.innerRef}
+          {...magic.droppableProps}
+          isDraggingOver={snapshot.isDraggingOver}
+        >
+          Trash
+        </Wrapper>
+      )}
+    </Droppable>
   );
 }
 

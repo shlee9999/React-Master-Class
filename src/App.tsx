@@ -5,6 +5,7 @@ import { toDoState } from './atoms';
 
 import Board from './components/Board';
 import Trash from './components/Trash';
+import TitleModal from './components/TitleModal';
 const Wrapper = styled.div`
   display: flex;
   max-width: 800px;
@@ -61,9 +62,15 @@ function App() {
       });
     }
   };
+  const addBoard = (title: string) => {
+    setToDos((allBorads) => ({ ...allBorads, [title]: [] }));
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
+        <button>addBoard</button>
+        <TitleModal />
         <Boards>
           {Object.keys(toDos).map((boardId) => (
             <Board key={boardId} toDos={toDos[boardId]} boardId={boardId} />
