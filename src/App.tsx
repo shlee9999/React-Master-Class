@@ -6,25 +6,55 @@ import { toDoState } from './atoms';
 import Board from './components/Board';
 import Trash from './components/Trash';
 import TitleModal from './components/TitleModal';
+import { useState } from 'react';
+
 const Wrapper = styled.div`
+  padding: 30px;
   display: flex;
+  flex-direction: column;
   max-width: 800px;
   width: 100%;
   margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  gap: 30px;
+`;
+const Title = styled.div`
+  font-size: 50px;
+  color: ${(props) => props.theme.boardColor};
 `;
 const Boards = styled.div`
   display: grid;
   width: 100%;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 10px;
-  min-height: 250px;
 `;
-
+const AddButton = styled.button`
+  position: absolute;
+  right: 30px;
+  top: 30px;
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  border: 2px solid ${(props) => props.theme.boardColor};
+  color: ${(props) => props.theme.boardColor};
+  font-size: 20px;
+  font-weight: 900;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  &:hover {
+    opacity: 0.8;
+  }
+  &:active {
+    opacity: 0.5;
+  }
+`;
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const onDragEnd = (info: DropResult) => {
     const { destination, source } = info;
     if (!destination) return; //같은 위치에 놓는 경우
@@ -62,15 +92,18 @@ function App() {
       });
     }
   };
-  const addBoard = (title: string) => {
-    setToDos((allBorads) => ({ ...allBorads, [title]: [] }));
+  const openModal = () => {
+    setIsModalOpen(true);
+  };
+  const closeModal = () => {
+    setIsModalOpen(false);
   };
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
-        <button>addBoard</button>
-        <TitleModal />
+        <AddButton onClick={openModal}>+</AddButton>
+        <Title>Canvan Board</Title>
         <Boards>
           {Object.keys(toDos).map((boardId) => (
             <Board key={boardId} toDos={toDos[boardId]} boardId={boardId} />
@@ -78,6 +111,7 @@ function App() {
         </Boards>
       </Wrapper>
       <Trash />
+      {isModalOpen && <TitleModal closeModal={closeModal} />}
     </DragDropContext>
   );
 }
