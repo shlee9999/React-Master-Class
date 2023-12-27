@@ -19,14 +19,23 @@ const Boards = styled.div`
   width: 100%;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
+  min-height: 250px;
 `;
 
 function App() {
   const [toDos, setToDos] = useRecoilState(toDoState);
   const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, source, draggableId } = info;
+    const { destination, source } = info;
     if (!destination) return; //같은 위치에 놓는 경우
+    if (destination.droppableId === 'trash') {
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        boardCopy.splice(source.index, 1);
+        return { ...allBoards, [source.droppableId]: boardCopy };
+      });
+
+      return;
+    }
     if (source.droppableId === destination.droppableId) {
       // same board
       setToDos((allBoards) => {
