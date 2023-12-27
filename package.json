@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@hello-pangea/dnd": "^16.5.0",
     "@tanstack/react-query": "^5.14.2",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
@@ -48,6 +49,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-beautiful-dnd": "^13.1.7",
     "@types/react-router-dom": "^5.3.3",
     "@types/styled-components": "^5.1.34",
     "recoil": "^0.7.7"
